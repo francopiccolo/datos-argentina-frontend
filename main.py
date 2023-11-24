@@ -1,7 +1,9 @@
 import streamlit as st
 import requests
 import pandas as pd
-import plotly.express as px
+
+from src.config import BACKEND_URL
+from src.charts import pct_ingresos_sobre_gasto_fig
 
 st.set_page_config(page_title='Datos Argentina 🤖', layout='wide')
 
@@ -21,16 +23,8 @@ with st.sidebar:
 
 st.title("🧠 Datos Argentina 🤖")
 
-data = requests.get("https://datos-argentina-backend-qkcide3fmq-ue.a.run.app/").json()
+# % ingresos sobre gasto
+data = requests.get(BACKEND_URL + 'pct_ingresos_sobre_gasto').json()
 df = pd.DataFrame(data)
-
-st.write(df)
-
-fig = px.line(
-    data_frame=df,
-    x='year',
-    y='pct_ingresos',
-    title='% de ingresos sobre el gasto',
-)
-fig.update_xaxes(tickmode='linear')
+fig = pct_ingresos_sobre_gasto_fig(df)
 st.plotly_chart(fig)
